@@ -16,10 +16,15 @@ $stmtcmt=$pdo->prepare("SELECT * FROM comments WHERE post_id=$blogId");
 $stmtcmt->execute();
 $cmResult=$stmtcmt->fetchAll();
 
-$authorId=$cmResult[0]['author_id'];
-$stmtau=$pdo->prepare("SELECT * FROM users WHERE id=$authorId");
-$stmtau->execute();
-$auResult=$stmtau->fetchAll();
+$auResult=[];
+if ($cmResult) {
+ foreach ($cmResult as $key => $value) {
+   $authorId=$cmResult[$key]['author_id'];
+   $stmtau=$pdo->prepare("SELECT * FROM users WHERE id=$authorId");
+   $stmtau->execute();
+   $auResult[]=$stmtau->fetchAll();
+ }
+}
 
 if($_POST){
   $comment=$_POST['comment'];
@@ -37,7 +42,7 @@ if($_POST){
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Widgets</title>
+  <title>Blog Details</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -52,13 +57,13 @@ if($_POST){
 <div class="wrapper">
   <!-- Content Wrapper. Contains page content -->
   <div class="content wrapper" style="margin-left:0px !important">
-    <!-- Content Header (Page header) -->
+    <!-- Content Header (page header) -->
     <!-- Main Content -->
     <section class="content">
     <div class="row">
           <div class="col-md-12">
             <!-- Box Comment -->
-            <div class="card card-widget">
+            <div class="card" style="margin:10px !important">
               <div class="card-header">
                 <div style="text-align:center !important;float:none" class="card-title">
                   <h4><?php echo $result[0]['title'] ?></h4>
@@ -75,13 +80,19 @@ if($_POST){
               <!-- /.card-body -->
               <div class="card-footer card-comments">
                 <div class="card-comment">
-                  <div class="comment-text" style="margin-left:0px !important">
-                    <span class="username">
-                      <?php echo $auResult[0]['name']; ?>
-                    <span class="text-muted float-right"><?php echo $cmResult[0]['created_at']; ?></span>
-                    </span><!-- /.username -->
-                    <?php echo $cmResult[0]['content']; ?>
-                  </div>
+                  <?php if ($cmResult) {?>
+                    <div class="comment-text" style="margin-left:0px !important">
+                      <?php foreach ($cmResult as $key => $value) {?>
+                        <span class="username">
+                          <?php echo $auResult[$key][0]['name']; ?>
+                        <span class="text-muted float-right"><?php echo $value['created_at']; ?></span>
+                        </span><!-- /.username -->
+                        <?php echo $value['content']; ?><br>
+                    <?php  }
+                       ?>
+                    </div>
+                  <?php }
+                   ?>
                   <!-- /.comment-text -->
                 </div>
                 <!-- /.card-comment -->
@@ -89,10 +100,8 @@ if($_POST){
               <!-- /.card-footer -->
               <div class="card-footer">
                 <form action="" method="post">
-                  <img class="img-fluid img-circle img-sm" src="dist/img/user4-128x128.jpg" alt="Alt Text">
-                  <!-- .img-push is used to add margin to elements next to floating images -->
-                  <div class="img-push">
-                    <input type="text" name="comment" class=""="form-control form-control-sm" placeholder="Press enter to post comment">
+                  <div class="">
+                    <input type="text" name="comment" class="form-control form-control-sm" placeholder="Press enter to post comment">
                   </div>
                 </form>
               </div>
