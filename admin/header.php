@@ -35,7 +35,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
      $page=end($link_array);
       ?>
 
-     <form class="form-inline ml-3" method="post" action="<?php echo $page== 'index.php' ? 'index.php':'user_list.php'; ?>">
+     <form class="form-inline ml-3" method="post" action="<?php echo $page == 'index.php' ? 'index.php':'user_list.php'; ?>">
        <div class="input-group input-group-sn">
          <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
          <div class="input-group-append">
@@ -71,7 +71,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
 
       <!-- SidebarSearch Form -->
-      <div class="form-inline">
+      <!-- <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
@@ -80,7 +80,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">

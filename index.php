@@ -108,8 +108,8 @@ $result=$stmt->fetchAll();
   <!-- /.content-wrapper -->
 
   <footer class="main-footer" style="margin-left:0px !important">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.2.0
+    <div class="float-right d-none d-sm-inline">
+      <a href="logout.php" type="button" class="btn btn_default">Logout</a>
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>

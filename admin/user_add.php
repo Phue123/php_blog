@@ -6,6 +6,10 @@ require '../config/config.php';
 if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
   header('Location: login.php/');
 }
+if ($_SESSION['role'] != 1) {
+  header('Location: login.php/');
+}
+
 
 if ($_POST) {
   $name=$_POST['name'];
@@ -38,7 +42,7 @@ if ($_POST) {
 
 ?>
 
-<?php include("header.php") ?>
+<?php include('header.php'); ?>
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
