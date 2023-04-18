@@ -12,35 +12,46 @@ if ($_SESSION['role'] != 1) {
 
 
 if ($_POST) {
-  $id=$_POST['id'];
-  $title=$_POST['title'];
-  $content=$_POST['content'];
-
-  if ($_FILES['image']['name']!=null) {
-    $file='images/'.($_FILES['image']['name']);
-    $imageType=pathinfo($file,PATHINFO_EXTENSION);
-
-    if ($imageType !='png' && $imageType !='jpg' && $imageType !='jpeg') {
-      echo "<script>alert('Images must be png,jpg,jpeg')</script>";
-    }else {
-      $image=$_FILES['image']['name'];
-      move_uploaded_file($_FILES['image']['tmp_name'],$file);
-
-      $stmt=$pdo->prepare("UPDATE posts SET title='$title',content='$content',image='$image' WHERE id='$id'");
-      $result=$stmt->execute();
-      if($result){
-        echo "<script>alert('Successfully Updated');window.location.href='index.php';</script>";
-        //header('Location:index.php');
-     }
+  if (empty($_POST['title']) || empty($_POST['content'])) {
+    if(empty($_POST['title'])){
+      $titleError='Title cannot be null';
     }
-  }else {
-    $stmt=$pdo->prepare("UPDATE posts SET title='$title',content='$content' WHERE id='$id'");
-    $result=$stmt->execute();
-    if($result){
-      echo "<script>alert('Successfully Updated');window.location.href='index.php';</script>";
-      //header('Location:index.php');
+    if (empty($_POST['content'])) {
+      $contentError='Content cannot be null';
     }
+
+    }else{
+      $id=$_POST['id'];
+      $title=$_POST['title'];
+      $content=$_POST['content'];
+
+      if ($_FILES['image']['name']!=null) {
+        $file='images/'.($_FILES['image']['name']);
+        $imageType=pathinfo($file,PATHINFO_EXTENSION);
+
+        if ($imageType !='png' && $imageType !='jpg' && $imageType !='jpeg') {
+          echo "<script>alert('Images must be png,jpg,jpeg')</script>";
+        }else {
+          $image=$_FILES['image']['name'];
+          move_uploaded_file($_FILES['image']['tmp_name'],$file);
+
+          $stmt=$pdo->prepare("UPDATE posts SET title='$title',content='$content',image='$image' WHERE id='$id'");
+          $result=$stmt->execute();
+          if($result){
+            echo "<script>alert('Successfully Updated');window.location.href='index.php';</script>";
+            //header('Location:index.php');
+         }
+        }
+      }else {
+        $stmt=$pdo->prepare("UPDATE posts SET title='$title',content='$content' WHERE id='$id'");
+        $result=$stmt->execute();
+        if($result){
+          echo "<script>alert('Successfully Updated');window.location.href='index.php';</script>";
+          //header('Location:index.php');
+        }
+      }
   }
+
 }
 
 $stmt=$pdo->prepare("SELECT * FROM posts WHERE id=".$_GET['id']);
@@ -60,15 +71,15 @@ $result=$stmt->fetchAll();
               <form class="" action="" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                   <input type="hidden" name="id" value="<?php echo $result[0]['id'] ?>">
-                  <label for="">Title</label>
-                  <input type="text" name="title" class="form-control" value="<?php echo $result[0]['title']?>" required>
+                  <label for="">Title</label><p style="color:red"><?php echo empty($titleError) ? '' : '*'.$titleError; ?></p>
+                  <input type="text" name="title" class="form-control" value="<?php echo $result[0]['title']?>">
                 </div>
                 <div class="form-group">
-                  <label for="">Content</label><br>
+                  <label for="">Content</label><p style="color:red"><?php echo empty($contentError) ? '' : '*'.$contentError; ?></p>
                   <textarea class="form-control" name="content" rows="8" cols="80"><?php echo $result[0]['content']?></textarea>
                 </div>
                 <div class="form-group">
-                  <label for="">Image</label><br>
+                  <label for="">Image</label><p style="color:red">
                   <img src="images/<?php echo $result[0]['image'] ?>" width="150" height="150" alt=""><br><br>
                   <input type="file" name="image" value="">
                 </div>

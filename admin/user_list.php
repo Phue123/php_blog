@@ -38,7 +38,7 @@ if (isset($_POST['search'])) {
               }else{
                 $pageno=1;
               }
-              $numOfrecs=1;
+              $numOfrecs=5;
               $offset=($pageno-1) * $numOfrecs;
 
 
